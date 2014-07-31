@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block meta_seo %}
+    <meta name="description" content="{{ meta.description }}" />
+    <meta name="keywords" content="{{ meta.keywords }}" />
+{% endblock %}
+
+{% block title %}
+    {{ meta.sitename }}
+{% endblock %}
+
+{% block content %}
+
+    <div>
+     {% if page %}
+
+        <article>
+            <header> <h1>{{ page.title }}</h1></header>
+            <div>
+                {{ page.body|safe }}
+            </div>
+            <footer>
+                <hr>
+            </footer>
+
+        </article>
+
+
+    {% endif %}
+
+    </div>
+
+{% endblock %}
+
+

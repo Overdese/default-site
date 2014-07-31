@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    {% block meta_seo %}
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    {% endblock %}
+    <!-- <link rel="shortcut icon" href="../assets/ico/favicon.png"> -->
+
+    <title>{% block title %} {% endblock %}</title>
+
+        <!-- Bootstrap core CSS -->
+    <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/jqcloud.css" rel="stylesheet">
+
+    {% load site_core_extras %}
+
+    {% html_from_parameters 'head_append' as head_append%}
+    {{ head_append|safe }}
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+
+                {% include 'header.html' %}
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-3">
+
+                {% include 'left_side.html' %}
+
+            </div>
+
+            <div class="col-sm-6">
+                <div>
+                    {% html_from_parameters 'advt_01' as advt_01%}
+                    {{ advt_01|safe }}
+
+                </div>
+
+               {%  comment %}
+               {% include 'content.html' %}
+               {%  endcomment %}
+                {% block content %}
+                {% endblock %}
+
+
+            </div>
+            <div class="col-sm-3">
+
+
+                {% include 'right_side.html' %}
+
+
+
+            </div>
+        </div>
+        <div class="    row">
+
+            {% include 'footer.html' %}
+
+        </div>
+    </div>
+
+
+    <!-- JavaScript
+    ================================================== -->
+    <script src="{{ STATIC_URL }}js/jquery.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+    <script src="{{ STATIC_URL }}js/jqcloud-1.0.4.js"></script>
+    <script src="{{ STATIC_URL }}js/twitter-bootstrap-hover-dropdown.js"></script>
+    <!-- jQCloud -->
+    <script type="text/javascript">
+
+        $(function() {
+            var word_array = [];
+            $.getJSON( "/ajax/json/",{id:"tag"}, function( data ) {
+                for (var i = 0; i < data.length; i++){
+                    word_array.push({"text": data[i].name, "weight": data[i].count, "link": data[i].slug})
+                }
+
+                $("#tag_cloud").jQCloud(word_array, {
+                    width: 250,
+                    height: 200,
+                    shape: "rectangular"
+                });
+            });
+        });
+    </script>
+    <!-- End jQCloud -->
+
+    <script type="text/javascript">
+    $(function() {
+        list_array = [];
+        $.getJSON( "/ajax/json/",{id:"category"}, function( data ) {
+
+            for (var i = 0; i < data.length; i++){
+                list_array.push('<li><a href="' + data[i].slug + '">' + data[i].name + '</a></li>');
+            }
+            $("#left-menu.dropdown-menu").html(list_array)
+        });
+    });
+
+    $(function() {
+        list_array1 = [];
+        $.getJSON( "/ajax/json/",{id:"page_menu"}, function( data ) {
+
+            for (var i = 0; i < data.length; i++){
+                if (data[i].child == null) {
+                    list_array1.push('<li><a href="' + data[i].slug + '">' + data[i].name + '</a></li>');
+                }
+                else {
+                    submenu_str = ''
+                    submenu_str += '<li class="dropdown">\n' +
+                            '<a href="#" class="dropdown-toggle dropdown-hover-activated" data-toggle="dropdown">' + data[i].name + '<b class="caret"></b></a>\n' +
+                            '<ul class="dropdown-menu">';
+                    for (var j=0;j < data[i].child.length;j++ ){
+                        submenu_str += '<li><a href="' + data[i].child[j].slug + '">' + data[i].child[j].name + '</a></li>';
+                    }
+                    submenu_str += '</ul></li>';
+                    list_array1.push(submenu_str)
+                }
+            }
+            $("ul#navbar-page-menu.nav.navbar-nav").html(list_array1)
+            $('.dropdown-hover-activated').dropdownHover().dropdown();
+        });
+    });
+
+
+
+    </script>
+
+    <!-- metrics -->
+    {% html_from_parameters 'metrics' as metrics %}
+    {{ metrics|safe }}
+
+</body>
+</html>
