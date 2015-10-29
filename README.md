@@ -1,3 +1,5 @@
+# this repo to old - all code are deprecated
+
 # Default-site
 
 ## Описание
